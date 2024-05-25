@@ -1,0 +1,124 @@
+﻿show databases;
+create database food_ordering_app;
+use food_ordering_app;
+show tables;
+
+
+CREATE TABLE customer (
+    fname VARCHAR(20),
+    lname VARCHAR(20),
+    custid INTEGER PRIMARY KEY,
+    emailid VARCHAR(20),
+    pwd VARCHAR(20),
+    address VARCHAR(20),
+    street VARCHAR(20),
+    pincode INTEGER,
+    gender VARCHAR(20),
+    phoneno int, -- Assuming you meant BIGINT for phone numbers
+    allergy VARCHAR(20) -- Corrected the column name from 'allargy' to 'allergy'
+);
+
+
+create table cuisine(
+cuisineid integer primary key,
+cuisinename varchar(20)
+);
+
+
+create table employee(
+empid integer primary key,
+fname varchar(20),
+lname varchar(20),
+dob varchar(20),
+emailid varchar(20),
+pwd varchar(20),
+address varchar(20),
+phoneno int,
+gender varchar(20),
+salary int
+);
+
+
+
+
+create table chef(
+chefid integer primary key,
+chefname varchar(20),
+address varchar(20),
+street varchar(20),
+phoneno varchar(20),
+cuisineid integer,
+empid integer,
+emailid varchar(20),
+pwd varchar(20),
+salary int,
+CONSTRAINT fk_chef_cuisine FOREIGN KEY (cuisineid) REFERENCES cuisine(cuisineid) ON DELETE CASCADE,
+CONSTRAINT fk_chef_employee FOREIGN KEY (empid) REFERENCES employee(empid) ON DELETE CASCADE
+
+
+);
+ 
+ 
+ create table ingredient(
+ ingid integer primary key,
+ ingname varchar (20)
+ );
+ 
+ create table food(
+ foodid integer primary key,
+ foodname varchar(20),
+ price integer,
+ quantity integer,
+ foodavail varchar(20),
+ cuisineid integer,
+ ingid integer,
+chefid integer,
+constraint  fk_food_cusie foreign key(cuisineid) references cuisine(cuisineid) on delete cascade,
+constraint fk_food_ingredient foreign key(ingid) references ingredient(ingid) on delete cascade,
+constraint fk_food_chef foreign key(chefid) references chef(chefid) on delete cascade
+
+
+ );
+ 
+ create table drink(
+ drinkid integer primary key,
+ drinkname varchar (20),
+ price long,
+ quantity varchar(20),
+ drinkavail varchar(20)
+ 
+ );
+ 
+create table delivery(
+ delid integer primary key,
+ delname varchar(20),
+ vehicleno integer(20),
+ delcharge integer,
+ deldate date,
+ deltime varchar(20),
+ custid integer(20),
+ empid integer,
+ constraint fk_delivery_customer foreign key (custid) references customer(custid) on delete cascade,
+ constraint fk_delivery_employee foreign key(empid) references employee(empid) on delete cascade
+ );
+ 
+create table orders(
+ ordid integer primary key,
+ totalcost integer,
+ foodid integer,
+ drinkid integer,
+ delid integer,
+ constraint fk_order_food foreign key (foodid) references food(foodid) on delete cascade,
+ constraint fk_oder_drink foreign key (drinkid) references drink(drinkid) on delete cascade,
+ constraint fk_order_delivery foreign key (delid) references delivery(delid) on delete cascade
+ );
+
+
+create table payment(
+payid integer primary key,
+paymetod varchar(20),
+custid integer,
+ordid integer,
+constraint fk_payment_customer foreign key (custid) references customer(custid) on delete cascade,
+constraint fk_payment_orders foreign key (ordid) references orders(ordid) on delete cascade
+);
